@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南山人壽 | DISC 人際風格分析測驗</title>
+    <meta property="og:title" content="南山人壽 | DISC 人際風格分析測驗">
+    <meta property="og:description" content="3分鐘探索你的職場性格！老虎、孔雀、無尾熊還是貓頭鷹？">
+    <meta property="og:type" content="website">
+    
+    <style>
+        :root {
+            --nanshan-blue: #0056b3;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --tiger: #FF8C00;
+            --peacock: #E91E63;
+            --koala: #4CAF50;
+            --owl: #607D8B;
+        }
+        body { font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; color: #444; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        h1 { color: var(--nanshan-blue); font-size: 24px; margin: 5px 0; }
+        .intro { background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--nanshan-blue); margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .question-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+        .question-card::before { content: ""; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--nanshan-blue); }
+        .group-title { font-size: 18px; font-weight: bold; color: var(--nanshan-blue); margin-bottom: 15px; display: flex; align-items: center; }
+        .group-title span { background: var(--nanshan-blue); color: white; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-size: 14px; }
+        .option-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; }
+        .option-text { font-size: 16px; flex: 1; }
+        select { appearance: none; background-color: #f9f9f9; border: 2px solid #ddd; padding: 8px 12px; border-radius: 10px; font-size: 14px; width: 80px; text-align: center; font-weight: bold; color: var(--nanshan-blue); }
+        .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #0056b3, #007bff); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,86,179,0.3); transition: 0.3s; margin-top: 10px; }
+        #result-page { display: none; text-align: center; }
+        .result-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .animal-icon { font-size: 80px; margin: 20px 0; }
+        .type-name { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+        .type-desc { text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; font-size: 15px; line-height: 1.8; }
+        .score-pill { padding: 5px 15px; border-radius: 20px; font-size: 13px; color: white; font-weight: bold; margin: 5px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header" id="main-header">
+        <div style="color:#0056b3; font-weight: bold; font-size: 24px;">NAN SHAN</div>
+        <div style="font-size: 12px; letter-spacing: 2px; color: #888;">南山人壽</div>
+        <h1>適性分析 DISC 測驗</h1>
+    </div>
+
+    <div id="quiz-page">
+        <div class="intro">
+            <p>🌟 <strong>測驗規則：</strong></p>
+            <p>請在每一組中填入 <strong>7、5、3、1</strong> 分。</p>
+            <p>7 分最符合您，1 分最不符合。<strong>每組數字不能重複！</strong></p>
+        </div>
+        <form id="discForm"></form>
+        <button type="button" class="btn-submit" onclick="processResult()">看我的分析結果 ✨</button>
+    </div>
+
+    <div id="result-page">
+        <div class="result-card">
+            <div id="result-score-pills"></div>
+            <div id="animal-emoji" class="animal-icon"></div>
+            <div id="result-type-name" class="type-name"></div>
+            <div id="result-explanation" class="type-desc"></div>
+            <button class="btn-submit" style="margin-top:30px; background:#666;" onclick="window.location.reload()">重新測驗</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = [
+        { g: 'A', options: [{t:'1. 堅定、固執', s:'D'}, {t:'2. 有說服力、善表達', s:'I'}, {t:'3. 溫和、文雅', s:'S'}, {t:'4. 謙虛、容忍', s:'C'}]},
+        { g: 'B', options: [{t:'1. 喜歡冒險、膽大', s:'D'}, {t:'2. 團體中活力的來源', s:'I'}, {t:'3. 節制、穩健', s:'S'}, {t:'4. 嚴格、考究', s:'C'}]},
+        { g: 'C', options: [{t:'1. 有決心、有決斷力', s:'D'}, {t:'2. 使人心服、善於遊說', s:'I'}, {t:'3. 善良、和諧', s:'S'}, {t:'4. 謹慎、小心', s:'C'}]},
+        { g: 'D', options: [{t:'1. 有競爭性、有進取心', s:'D'}, {t:'2. 頑皮、開朗', s:'I'}, {t:'3. 親切、誠懇', s:'S'}, {t:'4. 順從、善思考', s:'C'}]},
+        { g: 'E', options: [{t:'1. 堅持、有魄力', s:'D'}, {t:'2. 樂觀、好玩', s:'I'}, {t:'3. 寬大、仁慈', s:'S'}, {t:'4. 正確、準確', s:'C'}]}
+    ];
+
+    const form = document.getElementById('discForm');
+    data.forEach(item => {
+        let card = document.createElement('div');
+        card.className = 'question-card';
+        card.innerHTML = `<div class="group-title"><span>${item.g}</span> 組別 ${item.g}</div>`;
+        item.options.forEach(opt => {
+            card.innerHTML += `
+                <div class="option-item">
+                    <span class="option-text">${opt.t}</span>
+                    <select class="score-select" data-group="${item.g}" data-type="${opt.s}" required>
+                        <option value="">評分</option>
+                        <option value="7">7分</option>
+                        <option value="5">5分</option>
+                        <option value="3">3分</option>
+                        <option value="1">1分</option>
+                    </select>
+                </div>`;
+        });
+        form.appendChild(card);
+    });
+
+    function processResult() {
+        let scores = { D: 0, I: 0, S: 0, C: 0 };
+        const groups = ['A', 'B', 'C', 'D', 'E'];
+        for (let g of groups) {
+            let vals = Array.from(document.querySelectorAll(`select[data-group="${g}"]`)).map(s => s.value);
+            if (vals.includes("")) { alert(`請完成 ${g} 組的所有評分喔！`); return; }
+            if (new Set(vals).size !== 4) { alert(`哎呀！${g} 組的分數重複填寫了，請檢查一下。`); return; }
+            vals.forEach((v, idx) => {
+                let type = document.querySelectorAll(`select[data-group="${g}"]`)[idx].dataset.type;
+                scores[type] += parseInt(v);
+            });
+        }
+        let winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        showResult(winner, scores);
+    }
+
+    function showResult(type, allScores) {
+        document.getElementById('quiz-page').style.display = 'none';
+        document.getElementById('main-header').style.display = 'none';
+        document.getElementById('result-page').style.display = 'block';
+        const config = {
+            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【火象星座特質】</b><br>您是天生的領導者！追求效率與目標，具有獨立性格，喜歡做主，意志堅定且充滿自信。不達目的絕不罷休，看大方向而不拘泥小節。' },
+            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '<b>【風象星座特質】</b><br>您是大家的開心果！熱愛社交，擅長遊說大家一起出發。在團體中充滿活力與魅力，只要好吃好玩好逛您都不會缺席！' },
+            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '<b>【土象星座特質】</b><br>您是最好的夥伴！性情溫和、誠懇且親切。追求穩定與和諧，是最佳的支持者。處事穩健，是朋友心中最溫暖的後盾。' },
+            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '<b>【謹慎細節特質】</b><br>您是精確的大師！做事謹慎、考究且謙虛。注重細節與正確性，喜歡邏輯思考。您的專業與負責總能讓團隊非常安心。' }
+        };
+        const res = config[type];
+        document.getElementById('animal-emoji').innerText = res.icon;
+        document.getElementById('result-type-name').innerText = res.name;
+        document.getElementById('result-type-name').style.color = res.color;
+        document.getElementById('result-explanation').innerHTML = res.desc;
+        document.getElementById('result-score-pills').innerHTML = `
+            <div class="score-pill" style="background:var(--tiger)">老虎: ${allScores.D}</div>
+            <div class="score-pill" style="background:var(--peacock)">孔雀: ${allScores.I}</div>
+            <div class="score-pill" style="background:var(--koala)">無尾熊: ${allScores.S}</div>
+            <div class="score-pill" style="background:var(--owl)">貓頭鷹: ${allScores.C}</div>
+        `;
+        window.scrollTo(0,0);
+    }
+</script>
+</body>
+</html>
