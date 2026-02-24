@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>南山人壽 | DISC 人際風格分析</title>
+    <title>南山人壽 x 順可 | DISC人際風格分析</title>
+    <meta property="og:title" content="南山人壽 x 順可 | DISC人際風格分析">
+    <meta property="og:description" content="3分鐘探索你的職場性格！老虎、孔雀、無尾熊還是貓頭鷹？">
+    <meta property="og:type" content="website">
+    
     <style>
         :root {
             --nanshan-blue: #0056b3;
@@ -15,10 +19,9 @@
         body { font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 600px; margin: 0 auto; }
         .header { text-align: center; margin-bottom: 20px; }
-        .header img { width: 150px; margin-bottom: 10px; }
         h1 { color: var(--nanshan-blue); font-size: 22px; margin: 5px 0; }
         
-        /* 測驗說明與姓名區 */
+        /* 說明與姓名輸入 */
         .intro-card { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 6px solid var(--nanshan-blue); }
         .instruction-box { background: #eef6ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; color: #444; }
         .instruction-box strong { color: var(--nanshan-blue); }
@@ -28,7 +31,7 @@
         .name-input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
         .name-input-group input:focus { border-color: var(--nanshan-blue); outline: none; }
 
-        /* 題目卡片 */
+        /* 題目樣式 */
         .question-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--nanshan-blue); }
         .group-title { font-size: 18px; font-weight: bold; color: var(--nanshan-blue); margin-bottom: 15px; display: flex; align-items: center; }
         .group-title::before { content: "Q"; background: var(--nanshan-blue); color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-size: 14px; }
@@ -38,9 +41,8 @@
         select { appearance: none; background-color: #f9f9f9; border: 2px solid #ddd; padding: 8px; border-radius: 10px; font-size: 14px; width: 85px; text-align: center; font-weight: bold; color: var(--nanshan-blue); cursor: pointer; }
 
         .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #0056b3, #007bff); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,86,179,0.3); transition: 0.3s; }
-        .btn-submit:hover { transform: translateY(-2px); }
 
-        /* 結果頁面 */
+        /* 結果頁樣式 */
         #result-page { display: none; }
         .result-card { background: white; padding: 30px; border-radius: 30px; text-align: center; border: 3px solid var(--nanshan-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .user-name-display { font-size: 20px; color: #555; margin-bottom: 5px; font-weight: bold; }
@@ -72,103 +74,3 @@
             <div class="name-input-group">
                 <label for="userName">您的姓名：</label>
                 <input type="text" id="userName" placeholder="請輸入姓名以生成專屬報告" required>
-            </div>
-        </div>
-
-        <form id="discForm"></form>
-        <button type="button" class="btn-submit" onclick="processResult()">分析我的性格風格 ✨</button>
-    </div>
-
-    <div id="result-page">
-        <div class="result-card">
-            <div style="font-size: 13px; color: var(--nanshan-blue); letter-spacing: 2px; margin-bottom: 10px;">南山人壽 | 數位轉型 適性分析報告</div>
-            <div id="display-name" class="user-name-display"></div>
-            <div id="animal-emoji" class="animal-icon"></div>
-            <div id="result-type-name" class="type-name"></div>
-            <div id="result-score-pills" class="score-pill-box"></div>
-            <div id="result-explanation" class="desc-box"></div>
-            
-            <div class="screenshot-tip">📸 測驗完成！請「截圖」保存結果，並傳給您的服務人員。</div>
-            <button class="btn-submit" style="margin-top:25px; background:#95a5a6; font-size:14px; padding:12px;" onclick="window.location.reload()">重新測驗</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    const data = [
-        { g: 'A', options: [{t:'1. 堅定、固執', s:'D'}, {t:'2. 有說服力、善表達', s:'I'}, {t:'3. 溫和、文雅', s:'S'}, {t:'4. 謙虛、容忍', s:'C'}]},
-        { g: 'B', options: [{t:'1. 喜歡冒險、膽大', s:'D'}, {t:'2. 團體中活力的來源', s:'I'}, {t:'3. 節制、穩健', s:'S'}, {t:'4. 嚴格、考究', s:'C'}]},
-        { g: 'C', options: [{t:'1. 有決心、有決斷力', s:'D'}, {t:'2. 使人心服、善於遊說', s:'I'}, {t:'3. 善良、和諧', s:'S'}, {t:'4. 謹慎、小心', s:'C'}]},
-        { g: 'D', options: [{t:'1. 有競爭性、有進取心', s:'D'}, {t:'2. 頑皮、開朗', s:'I'}, {t:'3. 親切、誠懇', s:'S'}, {t:'4. 順從、善思考', s:'C'}]},
-        { g: 'E', options: [{t:'1. 堅持、有魄力', s:'D'}, {t:'2. 樂觀、好玩', s:'I'}, {t:'3. 寬大、仁慈', s:'S'}, {t:'4. 正確、準確', s:'C'}]}
-    ];
-
-    const form = document.getElementById('discForm');
-    data.forEach(item => {
-        let card = document.createElement('div');
-        card.className = 'question-card';
-        card.innerHTML = `<div class="group-title">組別 ${item.g} 評分</div>`;
-        item.options.forEach(opt => {
-            card.innerHTML += `
-                <div class="option-item">
-                    <span class="option-text">${opt.t}</span>
-                    <select class="score-select" data-group="${item.g}" data-type="${opt.s}">
-                        <option value="">評分</option>
-                        <option value="7">7分</option>
-                        <option value="5">5分</option>
-                        <option value="3">3分</option>
-                        <option value="1">1分</option>
-                    </select>
-                </div>`;
-        });
-        form.appendChild(card);
-    });
-
-    function processResult() {
-        const name = document.getElementById('userName').value.trim();
-        if (!name) { alert("請先填寫您的姓名喔！"); return; }
-
-        let scores = { D: 0, I: 0, S: 0, C: 0 };
-        const groups = ['A', 'B', 'C', 'D', 'E'];
-        
-        for (let g of groups) {
-            let selects = document.querySelectorAll(`select[data-group="${g}"]`);
-            let vals = Array.from(selects).map(s => s.value);
-            if (vals.includes("")) { alert(`請完成 ${g} 組的所有評分。`); return; }
-            if (new Set(vals).size !== 4) { alert(`提醒：${g} 組的分數 (7,5,3,1) 不能重複喔！`); return; }
-            selects.forEach(s => scores[s.dataset.type] += parseInt(s.value));
-        }
-
-        let winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        showResult(name, winner, scores);
-    }
-
-    function showResult(name, type, allScores) {
-        document.getElementById('quiz-page').style.display = 'none';
-        document.getElementById('main-header').style.display = 'none';
-        document.getElementById('result-page').style.display = 'block';
-        document.getElementById('display-name').innerText = name + " 的專屬特質分析";
-
-        const config = {
-            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【支配型 / 火象星座】</b><br>您是天生的領導者！喜歡做主，具有獨立性格，喜歡有目標的做事，不達目的不罷休。充滿自信、意志堅定、有活力，具有領導風範。看大方向而不拘泥小節。' },
-            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '<b>【影響型 / 風象星座】</b><br>您是團體中的活力來源！樂觀積極、善於溝通。只要好吃、好玩、好逛的地方都想參加。具備極強的說服力，是天生的行動派，喜歡號召大家一起出發！' },
-            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '<b>【穩健型 / 土象星座】</b><br>您是最佳的合作夥伴！性情溫和、文雅且親切誠懇。處事穩健、有節制，追求人際與生活的和諧穩定，是大家心中最可靠、最值得信賴的後盾。' },
-            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '<b>【謹慎型 / 完美主義】</b><br>您是精確的大師！做事謹慎、小心、注重正確與準確。您謙虛容忍，但對品質要求嚴格且考究。在做決定前會蒐集充足資訊，確保凡事精確無誤。' }
-        };
-
-        const res = config[type];
-        document.getElementById('animal-emoji').innerText = res.icon;
-        document.getElementById('result-type-name').innerText = res.name;
-        document.getElementById('result-type-name').style.color = res.color;
-        document.getElementById('result-explanation').innerHTML = res.desc;
-        document.getElementById('result-score-pills').innerHTML = `
-            <div class="score-pill" style="background:var(--tiger)">老虎: ${allScores.D}</div>
-            <div class="score-pill" style="background:var(--peacock)">孔雀: ${allScores.I}</div>
-            <div class="score-pill" style="background:var(--koala)">無尾熊: ${allScores.S}</div>
-            <div class="score-pill" style="background:var(--owl)">貓頭鷹: ${allScores.C}</div>
-        `;
-        window.scrollTo(0,0);
-    }
-</script>
-</body>
-</html>
