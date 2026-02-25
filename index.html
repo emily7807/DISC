@@ -94,7 +94,7 @@
         { g: 'E', options: [{t:'1. 堅持、有魄力', s:'D'}, {t:'2. 樂觀、好玩', s:'I'}, {t:'3. 寬大、仁慈', s:'S'}, {t:'4. 正確、準確', s:'C'}]}
     ];
 
-    let userResultData = {}; // 儲存結果供 Email 使用
+    let userResultData = {};
 
     const formElement = document.getElementById('discForm');
     questions.forEach(item => {
@@ -119,7 +119,13 @@
             document.querySelectorAll(`select[data-group="${g}"]`).forEach(s => scores[s.dataset.type] += parseInt(s.value));
         }
         const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        userResultData = { name, winner, scores }; // 存入全域變數
+        const config = {
+            'D': '老虎型 (Dominance)',
+            'I': '孔雀型 (Influence)',
+            'S': '無尾熊型 (Steadiness)',
+            'C': '貓頭鷹型 (Conscientiousness)'
+        };
+        userResultData = { name, winner: config[winner], scores };
         renderResult(name, winner, scores);
     }
 
@@ -155,7 +161,8 @@
             `孔雀分數：${userResultData.scores.I}\n` +
             `無尾熊分數：${userResultData.scores.S}\n` +
             `貓頭鷹分數：${userResultData.scores.C}\n\n` +
-            `歡迎隨時與您的服務人員「順可」聯繫討論您的分析結果！`
+            `歡迎隨時與您的服務人員聯繫討論您的分析結果！\n\n` +
+            `欲想要再深入了解自己「潛能測試分析-人格特質與業務特質」，歡迎預約！`
         );
         window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
     }
