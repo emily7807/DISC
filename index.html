@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>南山人壽 x 順可 | DISC人際風格分析</title>
-    <meta property="og:title" content="南山人壽 x 順可 | DISC人際風格分析">
-    <meta property="og:description" content="3分鐘探索你的職場性格！老虎、孔雀、無尾熊還是貓頭鷹？">
-    
     <style>
         :root {
             --nanshan-blue: #0056b3;
@@ -20,33 +17,29 @@
         .header { text-align: center; margin-bottom: 20px; }
         h1 { color: var(--nanshan-blue); font-size: 24px; margin: 5px 0; }
         
-        /* 說明與姓名輸入 */
         .intro-card { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 8px solid var(--nanshan-blue); }
         .instruction-box { background: #eef6ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
-        .instruction-box strong { color: var(--nanshan-blue); }
         
         .name-input-group { margin-top: 15px; }
         .name-input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--nanshan-blue); }
         .name-input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
 
-        /* 題目卡片 */
         .question-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--nanshan-blue); }
-        .group-title { font-size: 18px; font-weight: bold; color: var(--nanshan-blue); margin-bottom: 15px; display: flex; align-items: center; }
-        .group-title::before { content: "Q"; background: var(--nanshan-blue); color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; margin-right: 10px; font-size: 14px; }
+        .group-title { font-size: 18px; font-weight: bold; color: var(--nanshan-blue); margin-bottom: 15px; }
 
         .option-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; }
-        .option-text { font-size: 16px; flex: 1; }
-        select { appearance: none; background-color: #f9f9f9; border: 2px solid #ddd; padding: 8px; border-radius: 10px; font-size: 14px; width: 85px; text-align: center; font-weight: bold; color: var(--nanshan-blue); cursor: pointer; }
+        select { appearance: none; background-color: #f9f9f9; border: 2px solid #ddd; padding: 8px; border-radius: 10px; width: 85px; text-align: center; font-weight: bold; color: var(--nanshan-blue); cursor: pointer; }
 
-        .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #0056b3, #007bff); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,86,179,0.3); transition: 0.3s; margin-top: 10px; }
+        .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #0056b3, #007bff); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-email { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-reset { width: 100%; padding: 15px; background: #95a5a6; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        /* 結果頁面 */
         #result-page { display: none; }
         .result-card { background: white; padding: 30px; border-radius: 30px; text-align: center; border: 3px solid var(--nanshan-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .animal-icon { font-size: 80px; margin: 15px 0; }
         .type-name { font-size: 32px; font-weight: bold; margin-bottom: 15px; }
         .score-pill { padding: 6px 15px; border-radius: 20px; font-size: 13px; color: white; font-weight: bold; margin: 4px; display: inline-block; }
-        .desc-box { text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; font-size: 15px; line-height: 1.8; color: #444; border-left: 4px solid var(--nanshan-blue); }
+        .desc-box { text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; font-size: 15px; line-height: 1.8; border-left: 4px solid var(--nanshan-blue); }
     </style>
 </head>
 <body>
@@ -65,37 +58,34 @@
                 <strong>7分</strong> (最像自己) / <strong>5分</strong> / <strong>3分</strong> / <strong>1分</strong> (最不像自己)。<br>
                 <span style="color:red; font-weight:bold;">*注意：每一組內的分數不可重複填寫！</span>
             </div>
-            
             <div class="name-input-group">
                 <label for="userName">您的姓名：</label>
                 <input type="text" id="userName" placeholder="請輸入姓名以生成報告" required>
             </div>
         </div>
-
         <form id="discForm"></form>
-        
         <button type="button" class="btn-submit" onclick="processResult()">開始性格分析 ✨</button>
     </div>
 
     <div id="result-page">
         <div class="result-card">
-            <div style="font-size: 13px; color: var(--nanshan-blue); letter-spacing: 2px; margin-bottom: 10px;">南山人壽 x 順可 | 數位轉型 專屬報告</div>
-            <div id="display-name" style="font-size: 22px; font-weight: bold; color: #555;"></div>
+            <div style="font-size: 13px; color: var(--nanshan-blue); letter-spacing: 2px;">南山人壽 x 順可 | 數位轉型</div>
+            <div id="display-name" style="font-size: 22px; font-weight: bold; color: #555; margin-top: 10px;"></div>
             <div id="animal-emoji" class="animal-icon"></div>
             <div id="result-type-name" class="type-name"></div>
             <div id="result-score-pills"></div>
             <div id="result-explanation" class="desc-box"></div>
             
-            <div style="color: #ff4757; font-weight: bold; margin-top: 25px; font-size: 15px; border: 2px dashed #ff4757; padding: 10px; border-radius: 10px;">
-                📸 測驗完成！請「截圖」保存結果傳給服務人員。
+            <div style="margin-top: 30px;">
+                <button class="btn-email" onclick="sendEmail()">📧 寄送測驗結果到我的信箱</button>
+                <button class="btn-reset" onclick="window.location.reload()">🔄 重新測驗</button>
             </div>
-            <button class="btn-submit" style="margin-top:25px; background:#95a5a6; font-size:14px;" onclick="window.location.reload()">重新測驗</button>
+            <p style="color: #888; font-size: 12px; margin-top: 15px;">溫馨提示：寄送結果將自動開啟您的電子郵件 App</p>
         </div>
     </div>
 </div>
 
 <script>
-    // 確保這裡的題目資料完全正確
     const questions = [
         { g: 'A', options: [{t:'1. 堅定、固執', s:'D'}, {t:'2. 有說服力、善表達', s:'I'}, {t:'3. 溫和、文雅', s:'S'}, {t:'4. 謙虛、容忍', s:'C'}]},
         { g: 'B', options: [{t:'1. 喜歡冒險、膽大', s:'D'}, {t:'2. 團體中活力的來源', s:'I'}, {t:'3. 節制、穩健', s:'S'}, {t:'4. 嚴格、考究', s:'C'}]},
@@ -104,50 +94,33 @@
         { g: 'E', options: [{t:'1. 堅持、有魄力', s:'D'}, {t:'2. 樂觀、好玩', s:'I'}, {t:'3. 寬大、仁慈', s:'S'}, {t:'4. 正確、準確', s:'C'}]}
     ];
 
-    // 初始化題目
+    let userResultData = {}; // 儲存結果供 Email 使用
+
     const formElement = document.getElementById('discForm');
     questions.forEach(item => {
         const card = document.createElement('div');
         card.className = 'question-card';
         let optionsHtml = `<div class="group-title">組別 ${item.g} 評分</div>`;
         item.options.forEach(opt => {
-            optionsHtml += `
-                <div class="option-item">
-                    <span class="option-text">${opt.t}</span>
-                    <select class="score-select" data-group="${item.g}" data-type="${opt.s}">
-                        <option value="">評分</option>
-                        <option value="7">7分</option>
-                        <option value="5">5分</option>
-                        <option value="3">3分</option>
-                        <option value="1">1分</option>
-                    </select>
-                </div>`;
+            optionsHtml += `<div class="option-item"><span>${opt.t}</span><select class="score-select" data-group="${item.g}" data-type="${opt.s}"><option value="">評分</option><option value="7">7分</option><option value="5">5分</option><option value="3">3分</option><option value="1">1分</option></select></div>`;
         });
         card.innerHTML = optionsHtml;
         formElement.appendChild(card);
     });
 
     function processResult() {
-        const nameVal = document.getElementById('userName').value.trim();
-        if (!nameVal) { alert("請先輸入您的姓名喔！"); return; }
-
-        let finalScores = { D: 0, I: 0, S: 0, C: 0 };
-        const groupsList = ['A', 'B', 'C', 'D', 'E'];
-        
-        for (let g of groupsList) {
-            let selects = document.querySelectorAll(`select[data-group="${g}"]`);
-            let vals = Array.from(selects).map(s => s.value);
-            
+        const name = document.getElementById('userName').value.trim();
+        if (!name) { alert("請先輸入您的姓名喔！"); return; }
+        let scores = { D: 0, I: 0, S: 0, C: 0 };
+        for (let g of ['A','B','C','D','E']) {
+            let vals = Array.from(document.querySelectorAll(`select[data-group="${g}"]`)).map(s => s.value);
             if (vals.includes("")) { alert(`請完成 組別 ${g} 的所有評分喔！`); return; }
             if (new Set(vals).size !== 4) { alert(`提醒：組別 ${g} 的分數不可重複！`); return; }
-            
-            selects.forEach(s => {
-                finalScores[s.dataset.type] += parseInt(s.value);
-            });
+            document.querySelectorAll(`select[data-group="${g}"]`).forEach(s => scores[s.dataset.type] += parseInt(s.value));
         }
-
-        const winnerType = Object.keys(finalScores).reduce((a, b) => finalScores[a] > finalScores[b] ? a : b);
-        renderResult(nameVal, winnerType, finalScores);
+        const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        userResultData = { name, winner, scores }; // 存入全域變數
+        renderResult(name, winner, scores);
     }
 
     function renderResult(name, type, scores) {
@@ -155,29 +128,37 @@
         document.getElementById('main-header').style.display = 'none';
         document.getElementById('result-page').style.display = 'block';
         document.getElementById('display-name').innerText = name + " 的特質分析";
-
         const config = {
-            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【支配型 / 火象星座】</b><br>您是天生的領導者！意志堅定、充滿自信、有活力。追求效率與目標，不達目的不罷休。' },
-            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '<b>【影響型 / 風象星座】</b><br>您是大家的開心果！樂觀積極、善於溝通。具備極強的說服力，喜歡號召大家一起行動。' },
-            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '<b>【穩健型 / 土象星座】</b><br>您是最佳的夥伴！性情溫和、誠懇親切。追求和諧與穩定，是大家心中最溫暖的後盾。' },
-            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '<b>【謹慎型 / 完美主義】</b><br>您是精確的大師！做事謹慎、注重品質。對細節考究，您的專業總能讓大家感到安心。' }
+            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '您是天生的領導者！意志堅定、充滿自信、有活力。' },
+            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '您是大家的開心果！樂觀積極、善於溝通、充滿魅力。' },
+            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '您是最佳的夥伴！性情溫和、誠懇親切、處事穩健。' },
+            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '您是精確的大師！做事謹慎、注重品質與細節。' }
         };
-
         const res = config[type];
         document.getElementById('animal-emoji').innerText = res.icon;
         document.getElementById('result-type-name').innerText = res.name;
         document.getElementById('result-type-name').style.color = res.color;
         document.getElementById('result-explanation').innerHTML = res.desc;
-        
-        document.getElementById('result-score-pills').innerHTML = `
-            <div class="score-pill" style="background:var(--tiger)">老虎: ${scores.D}</div>
-            <div class="score-pill" style="background:var(--peacock)">孔雀: ${scores.I}</div>
-            <div class="score-pill" style="background:var(--koala)">無尾熊: ${scores.S}</div>
-            <div class="score-pill" style="background:var(--owl)">貓頭鷹: ${scores.C}</div>
-        `;
+        document.getElementById('result-score-pills').innerHTML = `<div class="score-pill" style="background:#FF8C00">老虎: ${scores.D}</div><div class="score-pill" style="background:#E91E63">孔雀: ${scores.I}</div><div class="score-pill" style="background:#4CAF50">無尾熊: ${scores.S}</div><div class="score-pill" style="background:#607D8B">貓頭鷹: ${scores.C}</div>`;
         window.scrollTo(0,0);
     }
-</script>
 
+    function sendEmail() {
+        const email = prompt("請輸入您的 Email 地址：");
+        if (!email) return;
+        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的 DISC 測驗報告`);
+        const body = encodeURIComponent(
+            `親愛的 ${userResultData.name}，你好：\n\n` +
+            `這是你剛完成的 DISC 人際風格分析報告：\n\n` +
+            `測驗結果：${userResultData.winner}\n` +
+            `老虎分數：${userResultData.scores.D}\n` +
+            `孔雀分數：${userResultData.scores.I}\n` +
+            `無尾熊分數：${userResultData.scores.S}\n` +
+            `貓頭鷹分數：${userResultData.scores.C}\n\n` +
+            `歡迎隨時與您的服務人員「順可」聯繫討論您的分析結果！`
+        );
+        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+</script>
 </body>
 </html>
