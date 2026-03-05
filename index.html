@@ -29,12 +29,11 @@
         .name-input-group input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
 
         .question-card { background: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--nanshan-blue); transition: 0.3s; }
-        .question-card.error { border-left-color: #ff4757; background-color: #fff5f5; }
         .group-title { font-size: 18px; font-weight: bold; color: var(--nanshan-blue); margin-bottom: 15px; }
 
         .option-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; }
+        .option-text { font-size: 16px; flex: 1; }
         select { appearance: none; background-color: #f9f9f9; border: 2px solid #ddd; padding: 8px; border-radius: 10px; width: 85px; text-align: center; font-weight: bold; color: var(--nanshan-blue); cursor: pointer; }
-        select.dup-error { border-color: #ff4757; color: #ff4757; background-color: #fff0f0; }
 
         .btn-submit { width: 100%; padding: 18px; background: linear-gradient(135deg, #0056b3, #007bff); color: white; border: none; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-email { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
@@ -63,7 +62,7 @@
             <div class="instruction-box">
                 🌟 <strong>測驗說明：</strong><br>
                 本測驗共有 A、B、C、D、E 五組題目。請在每組中依符合程度填入：<br>
-                <strong>7分</strong> (最像自己) / <strong>5分</strong> / <strong>3分</strong> / <strong>1分</strong> (最不像自己) [cite: 35]。<br>
+                <strong>7分</strong> (最像自己) / <strong>5分</strong> / <strong>3分</strong> / <strong>1分</strong> (最不像自己)。<br>
                 <span style="color:red; font-weight:bold;">*提醒：每組內分數不可重複，系統將即時提醒！</span>
             </div>
             <div class="name-input-group">
@@ -105,116 +104,4 @@
     const formElement = document.getElementById('discForm');
     questions.forEach(item => {
         const card = document.createElement('div');
-        card.className = 'question-card';
-        card.id = `group-card-${item.g}`;
-        let optionsHtml = `<div class="group-title">組別 ${item.g} 評分</div>`;
-        item.options.forEach(opt => {
-            optionsHtml += `<div class="option-item"><span>${opt.t}</span>
-            <select class="score-select" data-group="${item.g}" data-type="${opt.s}" onchange="checkDuplicate(this)">
-                <option value="">評分</option>
-                <option value="7">7分</option>
-                <option value="5">5分</option>
-                <option value="3">3分</option>
-                <option value="1">1分</option>
-            </select></div>`;
-        });
-        card.innerHTML = optionsHtml;
-        formElement.appendChild(card);
-    });
-
-    // 即時檢查重複分數的功能
-    function checkDuplicate(currentSelect) {
-        const group = currentSelect.getAttribute('data-group');
-        const allInGroup = document.querySelectorAll(`select[data-group="${group}"]`);
-        const currentValue = currentSelect.value;
-        
-        if (currentValue === "") return;
-
-        let duplicateFound = false;
-        allInGroup.forEach(s => {
-            if (s !== currentSelect && s.value === currentValue) {
-                duplicateFound = true;
-            }
-        });
-
-        if (duplicateFound) {
-            alert(`提醒：組別 ${group} 已經選過 ${currentValue} 分了，請選擇其他分數！`);
-            currentSelect.value = ""; // 清空重複的選擇
-            currentSelect.classList.add('dup-error');
-            setTimeout(() => currentSelect.classList.remove('dup-error'), 1000);
-        }
-    }
-
-    function processResult() {
-        const name = document.getElementById('userName').value.trim();
-        if (!name) { alert("請先輸入您的姓名喔！"); return; }
-        
-        let scores = { D: 0, I: 0, S: 0, C: 0 };
-        for (let g of ['A','B','C','D','E']) {
-            let selects = document.querySelectorAll(`select[data-group="${g}"]`);
-            let vals = Array.from(selects).map(s => s.value);
-            if (vals.includes("")) { 
-                alert(`請完成 組別 ${g} 的所有評分喔！`); 
-                document.getElementById(`group-card-${g}`).scrollIntoView({behavior: "smooth"});
-                return; 
-            }
-        }
-        
-        // 重新加總
-        document.querySelectorAll('.score-select').forEach(s => {
-            scores[s.getAttribute('data-type')] += parseInt(s.value);
-        });
-        
-        const sortedArray = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-        userResultData = { name, sortedArray, scores };
-        renderRankedResult(name, sortedArray);
-    }
-
-    function renderRankedResult(name, sortedArray) {
-        document.getElementById('quiz-page').style.display = 'none';
-        document.getElementById('main-header').style.display = 'none';
-        document.getElementById('result-page').style.display = 'block';
-        document.getElementById('display-name').innerText = name + " 的測驗特質報告";
-
-        const config = {
-            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【支配型 / 火象星座】</b><br>您是天生的領導者！意志堅定、充滿自信、有活力 [cite: 100]。追求目標不達目的不罷休，看大方向而不拘泥小節 [cite: 105, 107]。' },
-            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '<b>【影響型 / 風象星座】</b><br>您是大家的開心果！樂觀積極、善於溝通、充滿魅力 [cite: 112, 124]。具備極強的說服力，喜歡號召大家一起行動 [cite: 119, 195]。' },
-            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '<b>【穩健型 / 水象星座】</b><br>您是最佳的夥伴！性情溫和、誠懇親切、處事穩健 [cite: 127, 140, 141]。追求和諧穩定，是大家心中最可靠的後盾 [cite: 130, 137]。' },
-            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '<b>【謹慎型 / 土象星座】</b><br>您是精確的大師！做事謹慎、注重品質 [cite: 144, 152]。對細節考究，您的專業總能讓大家感到安心 [cite: 145, 157]。' }
-        };
-
-        const container = document.getElementById('rank-container');
-        container.innerHTML = '';
-
-        sortedArray.forEach(([type, score], index) => {
-            const res = config[type];
-            const item = document.createElement('div');
-            item.className = 'rank-item' + (index === 0 ? ' active' : '');
-            const rankLabel = ["第一最高分", "第二高分", "第三高分", "最低分"][index];
-            item.innerHTML = `
-                <div class="rank-header" style="background:${res.color}" onclick="this.parentElement.classList.toggle('active')">
-                    <span>${res.icon} ${rankLabel}：${res.name.split(' ')[0]}</span>
-                    <span class="rank-badge">得分：${score} 分</span>
-                </div>
-                <div class="rank-content">${res.desc}</div>
-            `;
-            container.appendChild(item);
-        });
-        window.scrollTo(0,0);
-    }
-
-    function sendEmail() {
-        const email = prompt("請輸入您的 Email 地址：");
-        if (!email) return;
-        let reportDetails = userResultData.sortedArray.map(([type, score], index) => {
-            const label = ["最高", "第二高", "第三高", "最低"][index];
-            const typeName = { 'D':'老虎', 'I':'孔雀', 'S':'無尾熊', 'C':'貓頭鷹' }[type];
-            return `${label}：${typeName} (${score}分)`;
-        }).join('\n');
-        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的測驗特質報告`);
-        const body = encodeURIComponent(`親愛的 ${userResultData.userName || userResultData.name}，你好：\n\n這是你完成的 DISC 測驗特質報告：\n\n${reportDetails}\n\n歡迎隨時與您的服務人員聯繫討論您的分析結果！\n\n欲想要再深入了解自己「潛能測試分析-人格特質與業務特質」，歡迎預約！`);
-        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-    }
-</script>
-</body>
-</html>
+        card.className
