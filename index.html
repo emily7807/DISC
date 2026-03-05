@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>南山人壽 x 順可 | DISC人際風格分析</title>
+    <meta property="og:title" content="南山人壽 x 順可 | DISC人際風格分析">
+    <meta property="og:description" content="探索您的多重性格面向！點擊查看各項人格特質解析。">
+    
     <style>
         :root {
             --nanshan-blue: #0056b3;
@@ -18,7 +21,7 @@
         h1 { color: var(--nanshan-blue); font-size: 24px; margin: 5px 0; }
         
         .intro-card { background: white; padding: 25px; border-radius: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 8px solid var(--nanshan-blue); }
-        .instruction-box { background: #eef6ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
+        .instruction-box { background: #eef6ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
         
         .name-input-group { margin-top: 15px; }
         .name-input-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--nanshan-blue); }
@@ -35,11 +38,14 @@
         .btn-reset { width: 100%; padding: 15px; background: #95a5a6; color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
         #result-page { display: none; }
-        .result-card { background: white; padding: 30px; border-radius: 30px; text-align: center; border: 3px solid var(--nanshan-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .animal-icon { font-size: 80px; margin: 15px 0; }
-        .type-name { font-size: 32px; font-weight: bold; margin-bottom: 15px; }
-        .score-pill { padding: 6px 15px; border-radius: 20px; font-size: 13px; color: white; font-weight: bold; margin: 4px; display: inline-block; }
-        .desc-box { text-align: left; background: #f8f9fa; padding: 20px; border-radius: 15px; font-size: 15px; line-height: 1.8; border-left: 4px solid var(--nanshan-blue); }
+        .result-card { background: white; padding: 25px; border-radius: 30px; text-align: center; border: 3px solid var(--nanshan-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        
+        /* 摺疊面板樣式 */
+        .rank-item { margin-bottom: 15px; border-radius: 15px; overflow: hidden; border: 1px solid #eee; text-align: left; }
+        .rank-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; }
+        .rank-content { padding: 15px; background: #fcfcfc; display: none; font-size: 14px; line-height: 1.6; }
+        .rank-item.active .rank-content { display: block; }
+        .rank-badge { background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 10px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -64,23 +70,21 @@
             </div>
         </div>
         <form id="discForm"></form>
-        <button type="button" class="btn-submit" onclick="processResult()">開始性格分析 ✨</button>
+        <button type="button" class="btn-submit" onclick="processResult()">分析性格特質 ✨</button>
     </div>
 
     <div id="result-page">
         <div class="result-card">
             <div style="font-size: 13px; color: var(--nanshan-blue); letter-spacing: 2px;">南山人壽 x 順可 | 數位轉型</div>
-            <div id="display-name" style="font-size: 22px; font-weight: bold; color: #555; margin-top: 10px;"></div>
-            <div id="animal-emoji" class="animal-icon"></div>
-            <div id="result-type-name" class="type-name"></div>
-            <div id="result-score-pills"></div>
-            <div id="result-explanation" class="desc-box"></div>
+            <div id="display-name" style="font-size: 22px; font-weight: bold; color: #555; margin: 15px 0;"></div>
             
-            <div style="margin-top: 30px;">
-                <button class="btn-email" onclick="sendEmail()">📧 寄送測驗結果到我的信箱</button>
+            <div id="rank-container"></div>
+            
+            <div style="margin-top: 25px;">
+                <button class="btn-email" onclick="sendEmail()">📧 寄送詳細結果到信箱</button>
                 <button class="btn-reset" onclick="window.location.reload()">🔄 重新測驗</button>
             </div>
-            <p style="color: #888; font-size: 12px; margin-top: 15px;">溫馨提示：寄送結果將自動開啟您的電子郵件 App</p>
+            <p style="color: #ff4757; font-weight: bold; margin-top: 15px; font-size: 13px;">📸 建議截圖保存結果傳給服務人員</p>
         </div>
     </div>
 </div>
@@ -113,54 +117,73 @@
         if (!name) { alert("請先輸入您的姓名喔！"); return; }
         let scores = { D: 0, I: 0, S: 0, C: 0 };
         for (let g of ['A','B','C','D','E']) {
-            let vals = Array.from(document.querySelectorAll(`select[data-group="${g}"]`)).map(s => s.value);
+            let selects = document.querySelectorAll(`select[data-group="${g}"]`);
+            let vals = Array.from(selects).map(s => s.value);
             if (vals.includes("")) { alert(`請完成 組別 ${g} 的所有評分喔！`); return; }
             if (new Set(vals).size !== 4) { alert(`提醒：組別 ${g} 的分數不可重複！`); return; }
-            document.querySelectorAll(`select[data-group="${g}"]`).forEach(s => scores[s.dataset.type] += parseInt(s.value));
+            selects.forEach(s => scores[s.dataset.type] += parseInt(s.value));
         }
-        const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        const config = {
-            'D': '老虎型 (Dominance)',
-            'I': '孔雀型 (Influence)',
-            'S': '無尾熊型 (Steadiness)',
-            'C': '貓頭鷹型 (Conscientiousness)'
-        };
-        userResultData = { name, winner: config[winner], scores };
-        renderResult(name, winner, scores);
+        
+        // 排序逻辑
+        const sortedArray = Object.entries(scores)
+            .sort((a, b) => b[1] - a[1]); // 由高到低排序
+            
+        userResultData = { name, sortedArray, scores };
+        renderRankedResult(name, sortedArray);
     }
 
-    function renderResult(name, type, scores) {
+    function renderRankedResult(name, sortedArray) {
         document.getElementById('quiz-page').style.display = 'none';
         document.getElementById('main-header').style.display = 'none';
         document.getElementById('result-page').style.display = 'block';
-        document.getElementById('display-name').innerText = name + " 的特質分析";
+        document.getElementById('display-name').innerText = name + " 的多維特質報告";
+
         const config = {
-            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '您是天生的領導者！意志堅定、充滿自信、有活力。' },
-            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '您是大家的開心果！樂觀積極、善於溝通、充滿魅力。' },
-            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '您是最佳的夥伴！性情溫和、誠懇親切、處事穩健。' },
-            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '您是精確的大師！做事謹慎、注重品質與細節。' }
+            'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【支配型 / 火象星座】</b><br>您是天生的領導者！意志堅定、充滿自信、有活力。追求目標不達目的不罷休，看大方向而不拘泥小節。' },
+            'I': { name: '孔雀型 (Influence)', icon: '🦚', color: '#E91E63', desc: '<b>【影響型 / 風象星座】</b><br>您是大家的開心果！樂觀積極、善於溝通、充滿魅力。具備極強的說服力，喜歡號召大家一起行動。' },
+            'S': { name: '無尾熊型 (Steadiness)', icon: '🐨', color: '#4CAF50', desc: '<b>【穩健型 / 土象星座】</b><br>您是最佳的夥伴！性情溫和、誠懇親切、處事穩健。追求和諧穩定，是大家心中最可靠的後盾。' },
+            'C': { name: '貓頭鷹型 (Conscientiousness)', icon: '🦉', color: '#607D8B', desc: '<b>【謹慎型 / 完美主義】</b><br>您是精確的大師！做事謹慎、注重品質。對細節考究，您的專業總能讓大家感到安心。' }
         };
-        const res = config[type];
-        document.getElementById('animal-emoji').innerText = res.icon;
-        document.getElementById('result-type-name').innerText = res.name;
-        document.getElementById('result-type-name').style.color = res.color;
-        document.getElementById('result-explanation').innerHTML = res.desc;
-        document.getElementById('result-score-pills').innerHTML = `<div class="score-pill" style="background:#FF8C00">老虎: ${scores.D}</div><div class="score-pill" style="background:#E91E63">孔雀: ${scores.I}</div><div class="score-pill" style="background:#4CAF50">無尾熊: ${scores.S}</div><div class="score-pill" style="background:#607D8B">貓頭鷹: ${scores.C}</div>`;
+
+        const container = document.getElementById('rank-container');
+        container.innerHTML = '';
+
+        sortedArray.forEach(([type, score], index) => {
+            const res = config[type];
+            const item = document.createElement('div');
+            item.className = 'rank-item' + (index === 0 ? ' active' : ''); // 第一名預設展開
+            
+            const rankLabel = ["第一最高分", "第二高分", "第三高分", "最低分"][index];
+            
+            item.innerHTML = `
+                <div class="rank-header" style="background:${res.color}" onclick="this.parentElement.classList.toggle('active')">
+                    <span>${res.icon} ${rankLabel}：${res.name.split(' ')[0]}</span>
+                    <span class="rank-badge">得分：${score} 分</span>
+                </div>
+                <div class="rank-content">
+                    ${res.desc}
+                </div>
+            `;
+            container.appendChild(item);
+        });
         window.scrollTo(0,0);
     }
 
     function sendEmail() {
         const email = prompt("請輸入您的 Email 地址：");
         if (!email) return;
-        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的 DISC 測驗報告`);
+        
+        let reportDetails = userResultData.sortedArray.map(([type, score], index) => {
+            const label = ["最高", "第二高", "第三高", "最低"][index];
+            const typeName = { 'D':'老虎', 'I':'孔雀', 'S':'無尾熊', 'C':'貓頭鷹' }[type];
+            return `${label}：${typeName} (${score}分)`;
+        }).join('\n');
+
+        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的 DISC 完整分析報告`);
         const body = encodeURIComponent(
             `親愛的 ${userResultData.name}，你好：\n\n` +
-            `這是你剛完成的 DISC 人際風格分析報告：\n\n` +
-            `測驗結果：${userResultData.winner}\n` +
-            `老虎分數：${userResultData.scores.D}\n` +
-            `孔雀分數：${userResultData.scores.I}\n` +
-            `無尾熊分數：${userResultData.scores.S}\n` +
-            `貓頭鷹分數：${userResultData.scores.C}\n\n` +
+            `這是你完成的 DISC 人際風格分析報告（按強弱排序）：\n\n` +
+            reportDetails + `\n\n` +
             `歡迎隨時與您的服務人員聯繫討論您的分析結果！\n\n` +
             `欲想要再深入了解自己「潛能測試分析-人格特質與業務特質」，歡迎預約！`
         );
