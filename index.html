@@ -40,7 +40,6 @@
         #result-page { display: none; }
         .result-card { background: white; padding: 25px; border-radius: 30px; text-align: center; border: 3px solid var(--nanshan-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         
-        /* 摺疊面板樣式 */
         .rank-item { margin-bottom: 15px; border-radius: 15px; overflow: hidden; border: 1px solid #eee; text-align: left; }
         .rank-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: white; font-weight: bold; }
         .rank-content { padding: 15px; background: #fcfcfc; display: none; font-size: 14px; line-height: 1.6; }
@@ -124,10 +123,7 @@
             selects.forEach(s => scores[s.dataset.type] += parseInt(s.value));
         }
         
-        // 排序逻辑
-        const sortedArray = Object.entries(scores)
-            .sort((a, b) => b[1] - a[1]); // 由高到低排序
-            
+        const sortedArray = Object.entries(scores).sort((a, b) => b[1] - a[1]);
         userResultData = { name, sortedArray, scores };
         renderRankedResult(name, sortedArray);
     }
@@ -136,7 +132,8 @@
         document.getElementById('quiz-page').style.display = 'none';
         document.getElementById('main-header').style.display = 'none';
         document.getElementById('result-page').style.display = 'block';
-        document.getElementById('display-name').innerText = name + " 的多維特質報告";
+        // 修正標題顯示格式
+        document.getElementById('display-name').innerText = name + " 的測驗特質報告";
 
         const config = {
             'D': { name: '老虎型 (Dominance)', icon: '🐯', color: '#FF8C00', desc: '<b>【支配型 / 火象星座】</b><br>您是天生的領導者！意志堅定、充滿自信、有活力。追求目標不達目的不罷休，看大方向而不拘泥小節。' },
@@ -151,7 +148,7 @@
         sortedArray.forEach(([type, score], index) => {
             const res = config[type];
             const item = document.createElement('div');
-            item.className = 'rank-item' + (index === 0 ? ' active' : ''); // 第一名預設展開
+            item.className = 'rank-item' + (index === 0 ? ' active' : '');
             
             const rankLabel = ["第一最高分", "第二高分", "第三高分", "最低分"][index];
             
@@ -179,10 +176,10 @@
             return `${label}：${typeName} (${score}分)`;
         }).join('\n');
 
-        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的 DISC 完整分析報告`);
+        const subject = encodeURIComponent(`南山人壽 x 順可 | ${userResultData.name} 的測驗特質報告`);
         const body = encodeURIComponent(
             `親愛的 ${userResultData.name}，你好：\n\n` +
-            `這是你完成的 DISC 人際風格分析報告（按強弱排序）：\n\n` +
+            `這是你完成的 DISC 測驗特質報告（按強弱排序）：\n\n` +
             reportDetails + `\n\n` +
             `歡迎隨時與您的服務人員聯繫討論您的分析結果！\n\n` +
             `欲想要再深入了解自己「潛能測試分析-人格特質與業務特質」，歡迎預約！`
